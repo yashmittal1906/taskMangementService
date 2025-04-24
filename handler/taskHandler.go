@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"strings"
 	"taskMangementService/model"
 	"taskMangementService/service"
 
@@ -28,6 +29,14 @@ func (h *TaskHandler) CreateTask(c *gin.Context) {
     var task model.Task
     if err := c.ShouldBindJSON(&task); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+	if strings.TrimSpace(task.Title) == "" || strings.TrimSpace(task.Description) == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Title and Description are required"})
+        return
+    }
+	if !task.Status.IsValid() {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid status. Must be one of: pending, completed"})
         return
     }
     if err := h.Service.CreateTask(&task); err != nil {
