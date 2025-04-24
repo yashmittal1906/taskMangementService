@@ -14,9 +14,12 @@ func (r *TaskRepository) Create(task *model.Task) error {
     return r.DB.Create(task).Error
 }
 
-func (r *TaskRepository) GetAll(limit, offset int) ([]model.Task, error) {
+func (r *TaskRepository) GetAll(status string, limit, offset int) ([]model.Task, error) {
     var tasks []model.Task
     query := r.DB.Limit(limit).Offset(offset)
+    if status != "" {
+        query = query.Where("status = ?", status)
+    }
     err := query.Find(&tasks).Error
     return tasks, err
 }
