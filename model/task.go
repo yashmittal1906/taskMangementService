@@ -11,6 +11,7 @@ type Task struct {
     Title       string    `json:"title" gorm:"not null"`
     Description string    `json:"description" gorm:"not null"`
     Status      enums.TaskStatus    `json:"status" gorm:"not null"`
+	UserId      uint	  `json:"userId" gorm:"not null"`
     CreatedAt   time.Time `json:"created_at"`
     UpdatedAt   time.Time `json:"updated_at"`
 }
